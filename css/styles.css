@@ -1,0 +1,62 @@
+* {
+  margin: 0 auto;
+  padding: 0;
+}
+body {
+  background-color: #ededed !important;
+  font-family: "Lato", "Helvetica Neue", Helvetica, "Roboto", sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.43;
+  color: #484848;
+  overflow-x: hidden;
+}
+.ma-input {
+  border: 1px solid #aaa;
+  border-radius: 2px;
+  -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+  background-color: #FFF;
+  color: #484848;
+  display: block;
+  width: 100%;
+}
+.ma-input--default {
+  padding: 10px;
+  font-size: 16px;
+}
+.add-word-form {
+  text-align: center;
+  margin-bottom: 20px;
+  display: none;
+}
+.panel {
+  margin-top: 20px;
+  background: white;
+  padding: 20px;
+  border: 1px #868e96 solid;
+}
+form {
+  margin-top: 40px;
+}
+.top-row, .word-list a {
+  color: #999;
+  font-size: 13px;
+  margin: 10px;
+}
+.top-row a, .word-list a {
+  color: #999;
+  text-decoration: none;
+}
+.top-row a:hover, .word-list a:hover {
+  text-decoration: none;
+}
+h2 {
+  text-align: center;
+}
+h4 {
+  text-align: left;
+}
