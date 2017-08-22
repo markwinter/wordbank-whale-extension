@@ -6,5 +6,62 @@
   "appDesc": {
     "message": "Save words from web pages for later learning",
     "description": "The description of the application"
+  },
+  "export": {
+    "message": "Export"
+  },
+  "addNewWord": {
+    "message": "Add New Word"
+  },
+  "cancelNewWord": {
+    "message": "Cancel New Word"
+  },
+  "titleAddNew": {
+    "message": "Add New"
+  },
+  "titleWordBank": {
+    "message": "Word Bank"
+  },
+  "saveNewWord": {
+    "message": "Save"
+  },
+  "tableColFirst": {
+    "message": "First"
+  },
+  "tableColSecond": {
+    "message": "Second"
+  },
+  "clearAllWords": {
+    "message": "Clear all words"
+  },
+  "placeholderNewWord": {
+    "message": "New Word"
+  },
+  "placeholderTranslation": {
+    "message": "Translation"
+  },
+  "titleHelp": {
+    "message": "Help"
+  },
+  "titleAnki": {
+    "message": "Exporting to Anki"
+  },
+  "ankiText": {
+    "message": "Clicking the Export button will open a new tab with an Anki formatted text document. To import this file into Anki, first save the exported text file. Then in Anki, click the Import button and select the downloaded text file. You can then choose which fields in the text file correspond to which language in your card deck."
+  },
+  "titleAbout": {
+    "message": "About"
+  },
+  "aboutText": {
+    "message": "Word Bank was created with the aim to make it easier for language learners to save words they come across online for later learning. To quickly add new words, you can highlight the word and then right-click and select the Word Bank menu item."
+  },
+  "titleVersion": {
+    "message": "Version"
+  },
+  "titleAuthor": {
+    "message": "Author"
+  },
+  "back": {
+    "message": "Back"
   }
 }

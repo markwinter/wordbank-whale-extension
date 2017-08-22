@@ -21,7 +21,7 @@
       "16": "icons/vault_16.png"
     },
     "default_page": "sidebar.html",
-    "default_title": "Word Bank",
+    "default_title": "__MSG_appName__",
     "use_navigation_bar": false
   }
 }

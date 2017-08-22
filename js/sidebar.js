@@ -1,4 +1,6 @@
 (function () {
+  internationalize()
+
   whale.runtime.sendMessage({sidebarOpened: true})
 
   whale.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -22,7 +24,7 @@
     document.getElementById('id_first_language').value = ""
     document.getElementById('id_first_language').focus()
     loadTable()
-  });
+  })
 
   document.getElementById('id_settings').addEventListener('click', (event) => {
     whale.extension.getBackgroundPage().console.log("Settings icon clicked")
@@ -126,10 +128,10 @@ function saveTextFile() {
     const wordlist = result.wordlist
     let data = ""
     wordlist.forEach((wordpair) => {
-      data += `${wordpair.firstWord};${wordpair.secondWord}\r\n`
+      data += `${wordpair.firstWord}${wordpair.secondWord}\r\n`
     })
     data = encodeURIComponent(data)
-    whale.tabs.create({url: `data:text/plain;charset=utf-8,${data}`})
+    whale.tabs.create({url: `data:text/plaincharset=utf-8,${data}`})
   })
 }
 
@@ -141,4 +143,22 @@ function removeFromStorage(firstWord, secondWord) {
     })
     whale.storage.sync.set({wordlist})
   })
+}
+
+function internationalize() {
+  function setProperty(selector, prop, msg) {
+    document.querySelector(selector)[prop] = whale.i18n.getMessage(msg)
+  }
+
+  setProperty('#id_export', 'innerText', 'export')
+  setProperty('#id_add_new', 'innerText', 'addNewWord')
+  setProperty('#id_cancel_new', 'innerText', 'cancelNewWord')
+  setProperty('#id_title_add_new', 'innerText', 'titleAddNew')
+  setProperty('#id_save_button', 'innerText', 'saveNewWord')
+  setProperty('#id_title_word_bank', 'innerText', 'titleWordBank')
+  setProperty('#id_th_1', 'innerText', 'tableColFirst')
+  setProperty('#id_th_2', 'innerText', 'tableColSecond')
+  setProperty('#id_clear_all', 'innerText', 'clearAllWords')
+  setProperty('#id_first_language', 'placeholder', 'placeholderNewWord')
+  setProperty('#id_second_language', 'placeholder', 'placeholderTranslation')
 }

@@ -13,9 +13,9 @@
   <body>
     <div class="top-row row" style="margin-left:0px">
       <div class="col-10">
-        <a id="id_export" href="#" style="margin-right:20px;">Export</a>
-        <a id="id_add_new" href="#">Add New Word</a>
-        <a id="id_cancel_new" href="#" style="display:none">Cancel New Word</a>
+        <a id="id_export" href="#" style="margin-right:20px;"></a>
+        <a id="id_add_new" href="#"></a>
+        <a id="id_cancel_new" href="#" style="display:none"></a>
       </div>
       <div class="col-2 text-right">
         <a id="id_settings" href="#" style="margin-right:15px"><i class="fa fa-cog"></i></a>
@@ -23,17 +23,17 @@
     </div>
 
     <div id="add-word-form" class="panel add-word-form">
-      <h2>Add New</h2>
+      <h2 id="id_title_add_new"></h2>
       <form class="form">
         <div class="form-group">
           <input id="id_first_language" name="first_language" type="text"
             class="ma-input ma-input--default"
-            placeholder="New Word"
+            placeholder=""
             required/>
         </div>
         <div class="form-group">
           <input id="id_second_language" name="second_language" type="text"
-            placeholder="Translation"
+            placeholder=""
             class="ma-input ma-input--default"
             required/>
           <!-- <button id="id_papago" type="button"
@@ -46,25 +46,25 @@
           <button id="id_save_button" type="submit"
             class="btn btn-success ma-btn ma-btn--large ma-btn--primary"
             style="width:100%">
-            Save
+
           </button>
         </div>
       </form>
     </div>
     <div class="panel word-list table-responsive">
-      <h2>Word Bank</h2>
+      <h2 id="id_title_word_bank"></h2>
       <table class="table">
         <thead>
           <tr>
-            <th width="45%">First</th>
-            <th width="45%">Second</th>
+            <th width="45%" id="id_th_1"></th>
+            <th width="45%" id="id_th_2"></th>
             <th></th>
           </tr>
         </thead>
         <tbody id="table-body">
         </tbody>
       </table>
-      <a id="id_clear_all" href="#">Clear all words</a>
+      <a id="id_clear_all" href="#"></a>
     </div>
     <script src="/js/sidebar.js" type="text/javascript"></script>
   </body>
