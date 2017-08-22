@@ -3,6 +3,57 @@
     "message": "단어 은행"
   },
   "appDesc": {
-    "message": "나중에 단어들을 암기하기 위해서 저장해요"
+    "message": "나중에 단어를 공부하기 위해서 저장해요"
+  },
+  "export": {
+    "message": "내보내기"
+  },
+  "titleAnki": {
+    "message": "Anki 내보내기"
+  },
+  "titleHelp": {
+    "message": "도움말"
+  },
+  "tableColFirst": {
+    "message": "첫번째"
+  },
+  "tableColSecond": {
+    "message": "두번째"
+  },
+  "titleVersion": {
+    "message": "버전"
+  },
+  "titleAuthor": {
+    "message": "작가"
+  },
+  "placeholderNewWord": {
+    "message": "새 단어"
+  },
+  "placeholderTranslation": {
+    "message": "번역"
+  },
+  "saveNewWord": {
+    "message": "저장하기"
+  },
+  "titleWordBank": {
+    "message": "단어 은행"
+  },
+  "addNewWord": {
+    "message": "새 단어 추가하기"
+  },
+  "cancelNewWord": {
+    "message": "새 단어 추가 취소하기"
+  },
+  "titleAddNew": {
+    "message": "새 단어를 추가하세요"
+  },
+  "clearAllWords": {
+    "message": "모든 단어 지우기"
+  },
+  "titleAbout": {
+    "message": "앱 정보"
+  },
+  "back": {
+    "message": "돌아가기"
   }
 }
