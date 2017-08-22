@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "Word Bank",
+    "description": "The title of the application"
+  },
+  "appDesc": {
+    "message": "Save words from web pages for later learning", 
+    "description":"The description of the application"
+  }
+}
