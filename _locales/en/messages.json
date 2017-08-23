@@ -63,5 +63,11 @@
   },
   "back": {
     "message": "Back"
+  },
+  "titleSource": {
+    "message": "Source Code"
+  },
+  "sourceText": {
+    "message": "Code on Github"
   }
 }

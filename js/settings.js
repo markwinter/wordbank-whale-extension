@@ -15,4 +15,6 @@ function internationalize() {
   setProperty('#id_title_version', 'innerText', 'titleVersion')
   setProperty('#id_title_author', 'innerText', 'titleAuthor')
   setProperty('#id_back', 'innerText', 'back')
+  setProperty('#id_title_source', 'innerText', 'titleSource')
+  setProperty('#id_source_text', 'innerText', 'sourceText')
 }
