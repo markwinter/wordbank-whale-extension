@@ -82,10 +82,27 @@ function loadTable() {
   if (tableLoaded)
     return
 
+  const table = $('#table').DataTable({
+      rowReorder: false,
+      paging: false,
+      searching: false,
+      responsive: true,
+      ordering: false,
+      info: false,
+      data: [],
+      columns: [
+        { data: "firstWord"},
+        { data: "secondWord"},
+        { render: function() {
+          return "<i class='fa fa-times' style='color:#dc3545' id='id_delete_row'></i>"
+        }}
+      ]
+  })
+
   whale.storage.sync.get({"wordlist": []}, (result) => {
-    const wordlist = result.wordlist
-    wordlist.forEach((wordpair) => {
-      addRowToTable(wordpair.firstWord, wordpair.secondWord)
+    // Not the most efficient but only way I can get it working for some reason
+    result.wordlist.forEach((wordpair) => {
+      table.row.add({"firstWord": wordpair.firstWord, "secondWord": wordpair.secondWord}).draw()
     })
   })
 
