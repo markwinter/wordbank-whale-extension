@@ -60,3 +60,9 @@ h2 {
 h4 {
   text-align: left;
 }
+.row {
+  width: 100%;
+}
+.table thead th {
+  border: none !important;
+}

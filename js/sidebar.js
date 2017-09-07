@@ -9,70 +9,68 @@
       return
     }
 
-    document.getElementById('add-word-form').style.display = "block"
-    document.getElementById('id_cancel_new').style.display = "inline"
-    document.getElementById('id_add_new').style.display = "none"
-    document.getElementById('id_first_language').value = message.selectedText
-    document.getElementById('id_second_language').focus()
+    $('#add-word-form').css('display', 'block')
+    $('#id_cancel_new').css('display', 'inline')
+    $('#id_add_new').css('display', 'none')
+    $('#id_first_language').val(message.selectedText)
+    $('#id_second_language').focus()
     loadTable()
   })
 
   whale.sidebarAction.onClicked.addListener((result) => {
-    document.getElementById('add-word-form').style.display = "none"
-    document.getElementById('id_cancel_new').style.display = "none"
-    document.getElementById('id_add_new').style.display = "inline"
-    document.getElementById('id_first_language').value = ""
-    document.getElementById('id_first_language').focus()
+    $('#add-word-form').css('display', 'none')
+    $('#id_cancel_new').css('display', 'none')
+    $('#id_add_new').css('display', 'inline')
+    $('#id_first_language').val("")
+    $('#id_first_language').focus()
     loadTable()
   })
 
-  document.getElementById('id_settings').addEventListener('click', (event) => {
-    whale.extension.getBackgroundPage().console.log("Settings icon clicked")
+  $('#id_settings').on('click', (event) => {
     event.preventDefault()
     resetPage()
     window.location.href = "/settings.html"
-  }, false)
+  })
 
-  document.getElementById('id_add_new').addEventListener('click', () => {
-    document.getElementById('add-word-form').style.display = "block"
-    document.getElementById('id_cancel_new').style.display = "inline"
-    document.getElementById('id_add_new').style.display = "none"
-  }, false)
+  $('#id_add_new').on('click', () => {
+    $('#add-word-form').css('display', 'block')
+    $('#id_cancel_new').css('display', 'inline')
+    $('#id_add_new').css('display', 'none')
+  })
 
-  document.getElementById('id_cancel_new').addEventListener('click', () => {
+  $('#id_cancel_new').on('click', () => {
     resetPage()
-  }, false)
+  })
 
-  document.getElementById('id_save_button').addEventListener('click', (event) => {
+  $('#id_save_button').on('click', (event) => {
     event.preventDefault()
 
-    firstWordElement = document.getElementById('id_first_language')
-    firstWord = firstWordElement.value
-    secondWordElement= document.getElementById('id_second_language')
-    secondWord = secondWordElement.value
+    firstWord = $('#id_first_language').val()
+    secondWord = $('#id_second_language').val()
 
     if (firstWord !== "" && secondWord !== "") {
       whale.storage.sync.get({"wordlist": []}, (result) => {
         let wordlist = result.wordlist
-        wordlist.push({firstWord, secondWord})
+        const id = wordlist.length + 1
+        wordlist.push({id, firstWord, secondWord})
         whale.storage.sync.set({wordlist}, () => {
-          addRowToTable(firstWord, secondWord)
+          addRowToTable(id, firstWord, secondWord)
         })
       })
     }
 
     resetPage()
-  }, false)
+  })
 
-  document.getElementById('id_export').addEventListener('click', () => {
+  $('#id_export').on('click', () => {
     saveTextFile()
-  }, false)
+  })
 
-  document.getElementById('id_clear_all').addEventListener('click', (event) => {
+  $('#id_clear_all').on('click', (event) => {
     event.preventDefault()
     whale.storage.sync.set({"wordlist": []})
     clearTable()
-  }, false)
+  })
 })()
 
 let tableLoaded = false
@@ -82,10 +80,49 @@ function loadTable() {
   if (tableLoaded)
     return
 
+  const table = $('#table').DataTable({
+      rowReorder: {
+        selector: "tr",
+        dataSrc: "id"
+      },
+      paging: false,
+      searching: false,
+      responsive: true,
+      ordering: true,
+      info: false,
+      data: [],
+      columns: [
+        { data: "id"},
+        { data: "firstWord"},
+        { data: "secondWord"},
+        { render: function() {
+          return "<i class='fa fa-times delete' style='color:#dc3545'></i>"
+        }}
+      ],
+      columnDefs: [
+        { targets: 0, visible: false},
+        { targets: '_all', orderable: false}
+      ],
+      order: [
+        [0, "asc"]
+      ],
+      "fnDrawCallback": function(oSettings) {
+        $("i.fa.fa-times.delete").click(function(event) {
+          row = $(this).closest("tr")
+          let words = []
+          row.children().each(function() {
+            words.push($(this).text())
+          })
+          removeFromStorage(words[0], words[1])
+          row.remove();
+        });
+      }
+  })
+
   whale.storage.sync.get({"wordlist": []}, (result) => {
-    const wordlist = result.wordlist
-    wordlist.forEach((wordpair) => {
-      addRowToTable(wordpair.firstWord, wordpair.secondWord)
+    // Not the most efficient but only way I can get it working for some reason
+    result.wordlist.forEach((wordpair) => {
+      table.row.add({"id": wordpair.id, "firstWord": wordpair.firstWord, "secondWord": wordpair.secondWord}).draw()
     })
   })
 
@@ -93,34 +130,24 @@ function loadTable() {
 }
 
 function clearTable() {
-  let table = document.getElementById('table-body')
-  while (table.rows.length > 0)
-    table.deleteRow(0)
+  $('#table').DataTable().clear().draw()
 }
 
-function addRowToTable(firstWord, secondWord) {
-  let tableRef = document.getElementById('table-body')
-  let newRow = tableRef.insertRow(tableRef.rows.length)
-  newRow.insertCell(0).appendChild(document.createTextNode(firstWord))
-  newRow.insertCell(1).appendChild(document.createTextNode(secondWord))
-
-  let deleteElem = document.createElement('i')
-  deleteElem.classList.add('fa')
-  deleteElem.classList.add('fa-times')
-  deleteElem.style.color = "#dc3545"
-  deleteElem.onclick = (event) => {
-    newRow.remove()
-    removeFromStorage(firstWord, secondWord)
-  }
-  newRow.insertCell(2).appendChild(deleteElem)
+function addRowToTable(id, firstWord, secondWord) {
+  const table = $('#table').DataTable()
+  table.row.add({
+    "id": id,
+    "firstWord": firstWord,
+    "secondWord": secondWord
+  }).draw()
 }
 
 function resetPage() {
-  document.getElementById('id_first_language').value = ""
-  document.getElementById('id_second_language').value = ""
-  document.getElementById('add-word-form').style.display = "none"
-  document.getElementById('id_cancel_new').style.display = "none"
-  document.getElementById('id_add_new').style.display = "inline"
+  $('#id_first_language').val("")
+  $('#id_second_language').val("")
+  $('#add-word-form').css('display', 'none')
+  $('#id_cancel_new').css('display', 'none')
+  $('#id_add_new').css('display', 'inline')
 }
 
 function saveTextFile() {
@@ -128,7 +155,7 @@ function saveTextFile() {
     const wordlist = result.wordlist
     let data = ""
     wordlist.forEach((wordpair) => {
-      data += `${wordpair.firstWord}${wordpair.secondWord}\r\n`
+      data += `${wordpair.firstWord};${wordpair.secondWord}\r\n`
     })
     data = encodeURIComponent(data)
     whale.tabs.create({url: `data:text/plaincharset=utf-8,${data}`})
