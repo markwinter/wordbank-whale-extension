@@ -155,7 +155,7 @@ function saveTextFile() {
     const wordlist = result.wordlist
     let data = ""
     wordlist.forEach((wordpair) => {
-      data += `${wordpair.firstWord}${wordpair.secondWord}\r\n`
+      data += `${wordpair.firstWord};${wordpair.secondWord}\r\n`
     })
     data = encodeURIComponent(data)
     whale.tabs.create({url: `data:text/plaincharset=utf-8,${data}`})
