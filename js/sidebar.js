@@ -121,10 +121,11 @@ function loadTable() {
   })
 
   table.on( 'row-reorder', (e, diff, edit) => {
-    console.log(diff)
-    diff.forEach((node) => {
-      const row = node.node;
-    })
+    // Return if no reordering has taken place
+    if (diff.length === 0)
+      return
+
+    updateIdsInStorage(diff)
   })
 
   tableLoaded = true
@@ -180,6 +181,42 @@ function removeFromStorage(firstWord, secondWord) {
     wordlist = wordlist.filter((wordpair) => {
       return wordpair.firstWord != firstWord && wordpair.secondWord != secondWord
     })
+    whale.storage.sync.set({wordlist})
+  })
+}
+
+function addToStorage({id, firstWord, secondWord}) {
+  whale.storage.sync.get({"wordlist": []}, (result) => {
+    let wordlist = result.wordlist
+    wordlist.push({id, firstWord, secondWord})
+    whale.storage.sync.set({wordlist})
+  })
+}
+
+async function updateIdsInStorage(diff) {
+  // Remove the items that were changed
+  let firstPair = {id: diff[0].oldData}
+  let secondPair = {id: diff[1].oldData}
+
+  whale.storage.sync.get({"wordlist": []}, (result) => {
+    let wordlist = result.wordlist
+    wordlist = wordlist.filter((wordpair) => {
+      if (wordpair.id == firstPair.id)
+        firstPair = Object.assign({}, wordpair)
+      if (wordpair.id == secondPair.id)
+        secondPair = Object.assign({}, wordpair)
+
+      return wordpair.id != firstPair.id && wordpair.id != secondPair.id
+    })
+
+    // Update the ids
+    firstPair.id = diff[0].newData
+    secondPair.id = diff[1].newData
+
+    // Re-add the items
+    wordlist.push(firstPair)
+    wordlist.push(secondPair)
+
     whale.storage.sync.set({wordlist})
   })
 }
