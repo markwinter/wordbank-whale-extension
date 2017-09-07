@@ -9,47 +9,44 @@
       return
     }
 
-    document.getElementById('add-word-form').style.display = "block"
-    document.getElementById('id_cancel_new').style.display = "inline"
-    document.getElementById('id_add_new').style.display = "none"
-    document.getElementById('id_first_language').value = message.selectedText
-    document.getElementById('id_second_language').focus()
+    $('#add-word-form').css('display', 'block')
+    $('#id_cancel_new').css('display', 'inline')
+    $('#id_add_new').css('display', 'none')
+    $('#id_first_language').val(message.selectedText)
+    $('#id_second_language').focus()
     loadTable()
   })
 
   whale.sidebarAction.onClicked.addListener((result) => {
-    document.getElementById('add-word-form').style.display = "none"
-    document.getElementById('id_cancel_new').style.display = "none"
-    document.getElementById('id_add_new').style.display = "inline"
-    document.getElementById('id_first_language').value = ""
-    document.getElementById('id_first_language').focus()
+    $('#add-word-form').css('display', 'none')
+    $('#id_cancel_new').css('display', 'none')
+    $('#id_add_new').css('display', 'inline')
+    $('#id_first_language').val("")
+    $('#id_first_language').focus()
     loadTable()
   })
 
-  document.getElementById('id_settings').addEventListener('click', (event) => {
-    whale.extension.getBackgroundPage().console.log("Settings icon clicked")
+  $('#id_settings').on('click', (event) => {
     event.preventDefault()
     resetPage()
     window.location.href = "/settings.html"
-  }, false)
+  })
 
-  document.getElementById('id_add_new').addEventListener('click', () => {
-    document.getElementById('add-word-form').style.display = "block"
-    document.getElementById('id_cancel_new').style.display = "inline"
-    document.getElementById('id_add_new').style.display = "none"
-  }, false)
+  $('#id_add_new').on('click', () => {
+    $('#add-word-form').css('display', 'block')
+    $('#id_cancel_new').css('display', 'inline')
+    $('#id_add_new').css('display', 'none')
+  })
 
-  document.getElementById('id_cancel_new').addEventListener('click', () => {
+  $('#id_cancel_new').on('click', () => {
     resetPage()
-  }, false)
+  })
 
-  document.getElementById('id_save_button').addEventListener('click', (event) => {
+  $('#id_save_button').on('click', (event) => {
     event.preventDefault()
 
-    firstWordElement = document.getElementById('id_first_language')
-    firstWord = firstWordElement.value
-    secondWordElement= document.getElementById('id_second_language')
-    secondWord = secondWordElement.value
+    firstWord = $('#id_first_language').val()
+    secondWord = $('#id_second_language').val()
 
     if (firstWord !== "" && secondWord !== "") {
       whale.storage.sync.get({"wordlist": []}, (result) => {
@@ -62,17 +59,17 @@
     }
 
     resetPage()
-  }, false)
+  })
 
-  document.getElementById('id_export').addEventListener('click', () => {
+  $('#id_export').on('click', () => {
     saveTextFile()
-  }, false)
+  })
 
-  document.getElementById('id_clear_all').addEventListener('click', (event) => {
+  $('#id_clear_all').on('click', (event) => {
     event.preventDefault()
     whale.storage.sync.set({"wordlist": []})
     clearTable()
-  }, false)
+  })
 })()
 
 let tableLoaded = false
@@ -94,9 +91,20 @@ function loadTable() {
         { data: "firstWord"},
         { data: "secondWord"},
         { render: function() {
-          return "<i class='fa fa-times' style='color:#dc3545' id='id_delete_row'></i>"
+          return "<i class='fa fa-times delete' style='color:#dc3545'></i>"
         }}
-      ]
+      ],
+      "fnDrawCallback": function(oSettings) {
+        $("i.fa.fa-times.delete").click(function(event) {
+          row = $(this).closest("tr")
+          let words = []
+          row.children().each(function() {
+            words.push($(this).text())
+          })
+          removeFromStorage(words[0], words[1])
+          row.remove();
+        });
+      }
   })
 
   whale.storage.sync.get({"wordlist": []}, (result) => {
@@ -110,13 +118,13 @@ function loadTable() {
 }
 
 function clearTable() {
-  let table = document.getElementById('table-body')
+  let table = $('#table-body')
   while (table.rows.length > 0)
     table.deleteRow(0)
 }
 
 function addRowToTable(firstWord, secondWord) {
-  let tableRef = document.getElementById('table-body')
+  let tableRef = $('#table-body')
   let newRow = tableRef.insertRow(tableRef.rows.length)
   newRow.insertCell(0).appendChild(document.createTextNode(firstWord))
   newRow.insertCell(1).appendChild(document.createTextNode(secondWord))
@@ -133,11 +141,11 @@ function addRowToTable(firstWord, secondWord) {
 }
 
 function resetPage() {
-  document.getElementById('id_first_language').value = ""
-  document.getElementById('id_second_language').value = ""
-  document.getElementById('add-word-form').style.display = "none"
-  document.getElementById('id_cancel_new').style.display = "none"
-  document.getElementById('id_add_new').style.display = "inline"
+  $('#id_first_language').val("")
+  $('#id_second_language').val("")
+  $('#add-word-form').css('display', 'none')
+  $('#id_cancel_new').css('display', 'none')
+  $('#id_add_new').css('display', 'inline')
 }
 
 function saveTextFile() {
