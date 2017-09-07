@@ -82,7 +82,7 @@ function loadTable() {
 
   const table = $('#table').DataTable({
       rowReorder: {
-        selector: "tr",
+        selector: "i.fa.fa-arrows.move",
         dataSrc: "id"
       },
       paging: false,
@@ -96,7 +96,7 @@ function loadTable() {
         { data: "firstWord"},
         { data: "secondWord"},
         { render: function() {
-          return "<i class='fa fa-times delete' style='color:#dc3545'></i>"
+          return "<i class='fa fa-arrows move' style='margin-right:30px'></i><i class='fa fa-times delete' style='color:#dc3545'></i>"
         }}
       ],
       columnDefs: [
@@ -108,13 +108,7 @@ function loadTable() {
       ],
       "fnDrawCallback": function(oSettings) {
         $("i.fa.fa-times.delete").click(function(event) {
-          row = $(this).closest("tr")
-          let words = []
-          row.children().each(function() {
-            words.push($(this).text())
-          })
-          removeFromStorage(words[0], words[1])
-          row.remove();
+          removeRowFromTable($(this).closest("tr"))
         });
       }
   })
@@ -122,7 +116,14 @@ function loadTable() {
   whale.storage.sync.get({"wordlist": []}, (result) => {
     // Not the most efficient but only way I can get it working for some reason
     result.wordlist.forEach((wordpair) => {
-      table.row.add({"id": wordpair.id, "firstWord": wordpair.firstWord, "secondWord": wordpair.secondWord}).draw()
+      addRowToTable(wordpair.id, wordpair.firstWord, wordpair.secondWord, table)
+    })
+  })
+
+  table.on( 'row-reorder', (e, diff, edit) => {
+    console.log(diff)
+    diff.forEach((node) => {
+      const row = node.node;
     })
   })
 
@@ -133,8 +134,19 @@ function clearTable() {
   $('#table').DataTable().clear().draw()
 }
 
-function addRowToTable(id, firstWord, secondWord) {
-  const table = $('#table').DataTable()
+function removeRowFromTable(row) {
+  let words = []
+  row.children().each(function() {
+    words.push($(this).text())
+  })
+  removeFromStorage(words[0], words[1])
+  row.remove();
+}
+
+function addRowToTable(id, firstWord, secondWord, table = undefined) {
+  if (!table)
+    table = $('#table').DataTable()
+
   table.row.add({
     "id": id,
     "firstWord": firstWord,
