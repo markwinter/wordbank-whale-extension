@@ -51,9 +51,10 @@
     if (firstWord !== "" && secondWord !== "") {
       whale.storage.sync.get({"wordlist": []}, (result) => {
         let wordlist = result.wordlist
-        wordlist.push({firstWord, secondWord})
+        const id = wordlist.length + 1
+        wordlist.push({id, firstWord, secondWord})
         whale.storage.sync.set({wordlist}, () => {
-          addRowToTable(firstWord, secondWord)
+          addRowToTable(id, firstWord, secondWord)
         })
       })
     }
@@ -80,19 +81,30 @@ function loadTable() {
     return
 
   const table = $('#table').DataTable({
-      rowReorder: false,
+      rowReorder: {
+        selector: "tr",
+        dataSrc: "id"
+      },
       paging: false,
       searching: false,
       responsive: true,
-      ordering: false,
+      ordering: true,
       info: false,
       data: [],
       columns: [
+        { data: "id"},
         { data: "firstWord"},
         { data: "secondWord"},
         { render: function() {
           return "<i class='fa fa-times delete' style='color:#dc3545'></i>"
         }}
+      ],
+      columnDefs: [
+        { targets: 0, visible: false},
+        { targets: '_all', orderable: false}
+      ],
+      order: [
+        [0, "asc"]
       ],
       "fnDrawCallback": function(oSettings) {
         $("i.fa.fa-times.delete").click(function(event) {
@@ -110,7 +122,7 @@ function loadTable() {
   whale.storage.sync.get({"wordlist": []}, (result) => {
     // Not the most efficient but only way I can get it working for some reason
     result.wordlist.forEach((wordpair) => {
-      table.row.add({"firstWord": wordpair.firstWord, "secondWord": wordpair.secondWord}).draw()
+      table.row.add({"id": wordpair.id, "firstWord": wordpair.firstWord, "secondWord": wordpair.secondWord}).draw()
     })
   })
 
@@ -118,26 +130,16 @@ function loadTable() {
 }
 
 function clearTable() {
-  let table = $('#table-body')
-  while (table.rows.length > 0)
-    table.deleteRow(0)
+  $('#table').DataTable().clear().draw()
 }
 
-function addRowToTable(firstWord, secondWord) {
-  let tableRef = $('#table-body')
-  let newRow = tableRef.insertRow(tableRef.rows.length)
-  newRow.insertCell(0).appendChild(document.createTextNode(firstWord))
-  newRow.insertCell(1).appendChild(document.createTextNode(secondWord))
-
-  let deleteElem = document.createElement('i')
-  deleteElem.classList.add('fa')
-  deleteElem.classList.add('fa-times')
-  deleteElem.style.color = "#dc3545"
-  deleteElem.onclick = (event) => {
-    newRow.remove()
-    removeFromStorage(firstWord, secondWord)
-  }
-  newRow.insertCell(2).appendChild(deleteElem)
+function addRowToTable(id, firstWord, secondWord) {
+  const table = $('#table').DataTable()
+  table.row.add({
+    "id": id,
+    "firstWord": firstWord,
+    "secondWord": secondWord
+  }).draw()
 }
 
 function resetPage() {
