@@ -194,28 +194,32 @@ function addToStorage({id, firstWord, secondWord}) {
 }
 
 async function updateIdsInStorage(diff) {
-  // Remove the items that were changed
-  let firstPair = {id: diff[0].oldData}
-  let secondPair = {id: diff[1].oldData}
+  // This function is horrible
+  oldIds = []
+  diff.forEach((item) => {
+      oldIds.push(item.oldData)
+  })
+
+  oldObjects = {}
 
   whale.storage.sync.get({"wordlist": []}, (result) => {
     let wordlist = result.wordlist
     wordlist = wordlist.filter((wordpair) => {
-      if (wordpair.id == firstPair.id)
-        firstPair = Object.assign({}, wordpair)
-      if (wordpair.id == secondPair.id)
-        secondPair = Object.assign({}, wordpair)
-
-      return wordpair.id != firstPair.id && wordpair.id != secondPair.id
+      if (oldIds.includes(wordpair.id)) {
+        oldObjects[wordpair.id] = Object.assign({}, wordpair)
+      }
+      // Remove the wordpairs with the old id's
+      return !oldIds.includes(wordpair.id)
     })
 
-    // Update the ids
-    firstPair.id = diff[0].newData
-    secondPair.id = diff[1].newData
-
-    // Re-add the items
-    wordlist.push(firstPair)
-    wordlist.push(secondPair)
+    Object.keys(oldObjects).forEach((key) => {
+      diff.forEach((item) => {
+        if (item.oldData == oldObjects[key].id) {
+          const newObject = Object.assign({}, oldObjects[key], {id: item.newData})
+          wordlist.push(newObject)
+        }
+      })
+    })
 
     whale.storage.sync.set({wordlist})
   })
