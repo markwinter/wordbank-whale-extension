@@ -120,7 +120,7 @@ function loadTable() {
     })
   })
 
-  table.on( 'row-reorder', (e, diff, edit) => {
+  table.on('row-reorder', (e, diff, edit) => {
     // Return if no reordering has taken place
     if (diff.length === 0)
       return
@@ -132,7 +132,7 @@ function loadTable() {
 }
 
 function clearTable() {
-  $('#table').DataTable().clear().draw()
+  $('#table').DataTable({retrieve: true}).clear().draw()
 }
 
 function removeRowFromTable(row) {
@@ -141,12 +141,12 @@ function removeRowFromTable(row) {
     words.push($(this).text())
   })
   removeFromStorage(words[0], words[1])
-  row.remove();
+  $('#table').DataTable({retrieve: true}).row(row).remove().draw()
 }
 
 function addRowToTable(id, firstWord, secondWord, table = undefined) {
   if (!table)
-    table = $('#table').DataTable()
+    table = $('#table').DataTable({retrieve: true})
 
   table.row.add({
     "id": id,
