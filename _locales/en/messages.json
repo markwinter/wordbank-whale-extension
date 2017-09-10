@@ -47,7 +47,13 @@
     "message": "Exporting to Anki"
   },
   "ankiText": {
-    "message": "Clicking the Export button will open a new tab with an Anki formatted text document. To import this file into Anki, first save the exported text file. Then in Anki, click the Import button and select the downloaded text file. You can then choose which fields in the text file correspond to which language in your card deck."
+    "message": "Click export and choose the Anki option. Save the file as a text file and then in Anki, click the Import button and select this downloaded text file. You can then choose which file fields correspond to which language in your card deck."
+  },
+  "titleCsv": {
+    "message": "Exporting to CSV"
+  },
+  "csvText": {
+    "message": "Click export and choose the CSV option. Save the text file with the extension '.csv' and open the file with a csv reader like excel"
   },
   "titleAbout": {
     "message": "About"

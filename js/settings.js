@@ -10,6 +10,8 @@ function internationalize() {
   setProperty('#id_title_help', 'innerText', 'titleHelp')
   setProperty('#id_title_anki', 'innerText', 'titleAnki')
   setProperty('#id_anki_text', 'innerText', 'ankiText')
+  setProperty('#id_title_csv', 'innerText', 'titleCsv')
+  setProperty('#id_csv_text', 'innerText', 'csvText')
   setProperty('#id_title_about', 'innerText', 'titleAbout')
   setProperty('#id_about_text', 'innerText', 'aboutText')
   setProperty('#id_title_version', 'innerText', 'titleVersion')
