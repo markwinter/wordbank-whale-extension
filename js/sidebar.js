@@ -108,7 +108,7 @@ function loadTable() {
         }}
       ],
       columnDefs: [
-        { targets: 0, visible: false},
+        { targers: 0, visible: false},
         { targets: '_all', orderable: false}
       ],
       order: [
@@ -143,13 +143,20 @@ function clearTable() {
   $('#table').DataTable({retrieve: true}).clear().draw()
 }
 
+let lastWords = null
 function removeRowFromTable(row) {
   let words = []
   row.children().each(function() {
     words.push($(this).text())
   })
+
+  if (JSON.stringify(words) == JSON.stringify(lastWords))
+    return
+
   removeFromStorage(words[0], words[1])
   $('#table').DataTable({retrieve: true}).row(row).remove().draw()
+
+  lastWords = words
 }
 
 function addRowToTable(id, firstWord, secondWord, table = undefined) {
