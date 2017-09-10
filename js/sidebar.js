@@ -62,8 +62,12 @@
     resetPage()
   })
 
-  $('#id_export').on('click', () => {
-    saveTextFile()
+  $('#id_export_anki').on('click', () => {
+    exportToAnki()
+  })
+
+  $('#id_export_csv').on('click', () => {
+    exportToCSV()
   })
 
   $('#id_clear_all').on('click', (event) => {
@@ -163,12 +167,24 @@ function resetPage() {
   $('#id_add_new').css('display', 'inline')
 }
 
-function saveTextFile() {
+function exportToAnki() {
   whale.storage.sync.get({"wordlist": []}, (result) => {
     const wordlist = result.wordlist
     let data = ""
     wordlist.forEach((wordpair) => {
       data += `${wordpair.firstWord};${wordpair.secondWord}\r\n`
+    })
+    data = encodeURIComponent(data)
+    whale.tabs.create({url: `data:text/plaincharset=utf-8,${data}`})
+  })
+}
+
+function exportToCSV() {
+  whale.storage.sync.get({"wordlist": []}, (result) => {
+    const wordlist = result.wordlist
+    let data = `"First Word","Second Word"\r\n`
+    wordlist.forEach((wordpair) => {
+      data += `"${wordpair.firstWord}","${wordpair.secondWord}"\r\n`
     })
     data = encodeURIComponent(data)
     whale.tabs.create({url: `data:text/plaincharset=utf-8,${data}`})
@@ -217,7 +233,7 @@ function internationalize() {
     document.querySelector(selector)[prop] = whale.i18n.getMessage(msg)
   }
 
-  setProperty('#id_export', 'innerText', 'export')
+  setProperty('#id_export', 'innerHTML', 'export')
   setProperty('#id_add_new', 'innerText', 'addNewWord')
   setProperty('#id_cancel_new', 'innerText', 'cancelNewWord')
   setProperty('#id_title_add_new', 'innerText', 'titleAddNew')

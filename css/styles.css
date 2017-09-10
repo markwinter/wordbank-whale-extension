@@ -66,3 +66,6 @@ h4 {
 .table thead th {
   border: none !important;
 }
+.export-dropdown {
+  display: inline;
+}
