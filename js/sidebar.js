@@ -1,5 +1,5 @@
 (function () {
-  internationalize()
+  leternationalize()
 
   whale.runtime.sendMessage({sidebarOpened: true})
 
@@ -68,6 +68,10 @@
 
   $('#id_export_csv').on('click', () => {
     exportToCSV()
+  })
+
+  $('#id_export_plain').on('click', () => {
+    exportToPlaletext()
   })
 
   $('#id_clear_all').on('click', (event) => {
@@ -191,6 +195,46 @@ function exportToCSV() {
   })
 }
 
+function exportToPlaletext() {
+  whale.storage.sync.get({"wordlist": []}, (result) => {
+    const wordlist = result.wordlist
+
+    const max = 100;
+    const spacer = 50;
+
+    let data = ""
+    for (let i = 0; i < max; i++)
+      data += "-"
+    data += "\r\n| First Word "
+
+    for (let i = 0; i < spacer - "| First Word ".length; i++)
+      data += " "
+    data += "| Second Word "
+
+    for (let i = 0; i < spacer - "| Second Word ".length - 1; i++)
+      data += " "
+    data += "|\r\n"
+
+    for (let i = 0; i < max; i++)
+      data += "-"
+    data += "\r\n"
+
+    wordlist.forEach((wordpair) => {
+      data += `| ${wordpair.firstWord}`
+      for (let i = 0; i < spacer - `| ${wordpair.firstWord}`.length; i++)
+        data += " "
+      data += "| "
+      data += `${wordpair.secondWord}`
+      for (let i = 0; i < spacer - `| ${wordpair.secondWord}`.length - 1; i++)
+        data += " "
+      data += "|\r\n"
+    })
+
+    data = encodeURIComponent(data)
+    whale.tabs.create({url: `data:text/plaincharset=utf-8,${data}`})
+  })
+}
+
 function removeFromStorage(firstWord, secondWord) {
   whale.storage.sync.get({"wordlist": []}, (result) => {
     let wordlist = result.wordlist
@@ -228,7 +272,7 @@ async function updateIdsInStorage(diff) {
   })
 }
 
-function internationalize() {
+function leternationalize() {
   function setProperty(selector, prop, msg) {
     document.querySelector(selector)[prop] = whale.i18n.getMessage(msg)
   }
