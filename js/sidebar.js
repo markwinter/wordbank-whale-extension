@@ -5,6 +5,7 @@
 
   whale.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.sidebarOpenedAck && message.selectedText === "") {
+      //loadSelect()
       loadTable()
       return
     }
@@ -14,6 +15,7 @@
     $('#id_add_new').css('display', 'none')
     $('#id_first_language').val(message.selectedText)
     $('#id_second_language').focus()
+    //loadSelect()
     loadTable()
   })
 
@@ -23,6 +25,7 @@
     $('#id_add_new').css('display', 'inline')
     $('#id_first_language').val("")
     $('#id_first_language').focus()
+    //loadSelect()
     loadTable()
   })
 
@@ -71,7 +74,7 @@
   })
 
   $('#id_export_plain').on('click', () => {
-    exportToPlaletext()
+    exportToPlainText()
   })
 
   $('#id_clear_all').on('click', (event) => {
@@ -82,6 +85,20 @@
 })()
 
 let tableLoaded = false
+let selectLoaded = false
+
+function loadSelect() {
+  if (selectLoaded)
+    return
+
+  // TODO: Add existing groups to select
+
+  $('#id_group').select2({
+    tags: true
+  })
+
+  selectLoaded = true
+}
 
 function loadTable() {
   // Dont load table again if already loaded elements
@@ -108,7 +125,7 @@ function loadTable() {
         }}
       ],
       columnDefs: [
-        { targers: 0, visible: false},
+        { targets: 0, visible: false},
         { targets: '_all', orderable: false}
       ],
       order: [
@@ -186,7 +203,7 @@ function exportToAnki() {
       data += `${wordpair.firstWord};${wordpair.secondWord}\r\n`
     })
     data = encodeURIComponent(data)
-    whale.tabs.create({url: `data:text/plaincharset=utf-8,${data}`})
+    whale.tabs.create({url: `data:text/plain;charset=utf-8,${data}`})
   })
 }
 
@@ -198,11 +215,11 @@ function exportToCSV() {
       data += `"${wordpair.firstWord}","${wordpair.secondWord}"\r\n`
     })
     data = encodeURIComponent(data)
-    whale.tabs.create({url: `data:text/plaincharset=utf-8,${data}`})
+    whale.tabs.create({url: `data:text/plain;charset=utf-8,${data}`})
   })
 }
 
-function exportToPlaletext() {
+function exportToPlainText() {
   whale.storage.sync.get({"wordlist": []}, (result) => {
     const wordlist = result.wordlist
 
@@ -238,7 +255,7 @@ function exportToPlaletext() {
     })
 
     data = encodeURIComponent(data)
-    whale.tabs.create({url: `data:text/plaincharset=utf-8,${data}`})
+    whale.tabs.create({url: `data:text/plain;charset=utf-8,${data}`})
   })
 }
 
